@@ -4,10 +4,15 @@ import com.thoughtworks.selenium.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
 import static org.junit.Assert.*;
 import static org.collectionspace.qa.selenium.uitests.Utilities.*;
 
@@ -16,15 +21,14 @@ import static org.collectionspace.qa.selenium.uitests.Utilities.*;
  * @author kasper
  */
 @RunWith(value = Parameterized.class)
-public class SecondaryTabTests {
+public class SecondaryTabTest {
 
-    static Selenium selenium;
-    public static int PORT_NUM = 4444;
-    public static String BROWSER = "firefox";
+    static WebDriverBackedSelenium selenium;
+
     private int primaryType, secondaryType;
     
 
-    public SecondaryTabTests(int primaryType, int secondaryType) {
+    public SecondaryTabTest(int primaryType, int secondaryType) {
         this.primaryType = primaryType;
         this.secondaryType = secondaryType;
     }
@@ -52,14 +56,9 @@ public class SecondaryTabTests {
         if (System.getProperty("baseurl") != null) {
             BASE_URL = System.getProperty("baseurl");
         }
-        if (System.getProperty("portnum") != null) {
-            PORT_NUM = Integer.parseInt(System.getProperty("portnum"));
-        }
-        if (System.getProperty("browser") != null) {
-            BROWSER = System.getProperty("browser");
-        }
-        selenium = new DefaultSelenium("localhost", PORT_NUM, BROWSER, BASE_URL);
-        selenium.start();
+        WebDriver driver =new FirefoxDriver();
+        selenium = new WebDriverBackedSelenium(driver, BASE_URL);
+
 
         //log in:
         login(selenium);
@@ -339,7 +338,7 @@ public class SecondaryTabTests {
     }
 
     //returns selector for the deleteButton
-    private String findListDeleteButton(int secondaryType, String secondaryID, Selenium selenium) throws Exception {
+    private String findListDeleteButton(int secondaryType, String secondaryID, WebDriverBackedSelenium selenium) throws Exception {
         textPresent(secondaryID, selenium);
         int rowCount = 0;
         System.out.println("textpresent: " + secondaryID);

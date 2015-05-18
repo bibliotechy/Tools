@@ -3,6 +3,8 @@ package org.collectionspace.qa.selenium.uitests;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.thoughtworks.selenium.*;
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +26,7 @@ public class Utilities {
      * @param selenium a Selenium object to check with
      * @throws Exception
      */
-    public static void login(Selenium selenium) throws Exception {
+    public static void login(WebDriverBackedSelenium selenium) throws Exception {
         System.out.println("Running login function...");
         selenium.open(LOGIN_URL);
         selenium.waitForPageToLoad(MAX_WAIT);
@@ -55,7 +57,7 @@ public class Utilities {
      * @param selenium The selenium object to use
      * @throws Exception
      */
-    public static void open(int primaryType, String primaryID, Selenium selenium) throws Exception {
+    public static void open(int primaryType, String primaryID, WebDriverBackedSelenium selenium) throws Exception {
         System.out.println("    opening record of type " + Record.getRecordTypePP(primaryType));
         elementPresent("css=.cs-searchBox .csc-searchBox-selectRecordType", selenium);
         //Search for our ID
@@ -87,7 +89,7 @@ public class Utilities {
      * @return
      * @throws Exception 
      */
-    public static String getLocationURN(Selenium selenium) throws Exception {
+    public static String getLocationURN(WebDriverBackedSelenium selenium) throws Exception {
         selenium.setTimeout(""+(Integer.parseInt(MAX_WAIT)*3));
         selenium.open("/collectionspace/tenant/core/" + Record.getRecordTypeShort(Record.MOVEMENT) + "/generator?quantity=1");        
         //wait for record to be generated
@@ -133,7 +135,7 @@ public class Utilities {
      * @return the ID of the generated record
      * @throws Exception
      */
-    public static String generateRecord(int recordType, Selenium selenium) throws Exception {
+    public static String generateRecord(int recordType, WebDriverBackedSelenium selenium) throws Exception {
         selenium.setTimeout(""+(Integer.parseInt(MAX_WAIT)*3)); //hack to handle slow generator                
         long timestamp = (new Date().getTime());
         log("generating record with: /collectionspace/chain/" + Record.getRecordTypeShortChain(recordType) + "/generator?quantity=1&startvalue=0&extraprefix=" + timestamp + "\n");
@@ -153,7 +155,7 @@ public class Utilities {
      * @param selenium a Selenium object to run the actions with
      * @throws Exception
      */
-    public static void save(Selenium selenium) throws Exception {
+    public static void save(WebDriverBackedSelenium selenium) throws Exception {
         //save record
         selenium.click("//input[@value='Save']");
 		if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
@@ -175,7 +177,7 @@ public class Utilities {
      * @param selenium
      * @throws Exception
      */
-    public static void saveSecondary(int secondaryType, String secondaryID, Selenium selenium) throws Exception {
+    public static void saveSecondary(int secondaryType, String secondaryID, WebDriverBackedSelenium selenium) throws Exception {
         selenium.click("css=.csc-relatedRecordsTab-" + Record.getRecordTypeShort(secondaryType) + " .saveButton");
 		if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
 			selenium.click("css=.csc-confirmationDialog .saveButton");
@@ -193,11 +195,11 @@ public class Utilities {
      * fill out any required fields.
      *
      * @param recordType The Record.recordType to create
-     * @param id The desired value of the ID field
+     * @param requiredValue The desired value of the ID field
      * @param selenium The selenium object which to run this on
      * @throws Exception
      */
-    public static void createAndSave(int recordType, String requiredValue, Selenium selenium) throws Exception {
+    public static void createAndSave(int recordType, String requiredValue, WebDriverBackedSelenium selenium) throws Exception {
         System.out.println("  createAndSave: recordType= " + Record.getRecordTypePP(recordType));
         //create new
         selenium.open(Record.getRecordTypeShort(recordType) + ".html");
@@ -225,7 +227,7 @@ public class Utilities {
      * @param primaryID
      * @param secondaryType
      */
-    public static void createNewRelatedOf(int primaryType, String primaryID, int secondaryType, Selenium selenium) throws Exception {
+    public static void createNewRelatedOf(int primaryType, String primaryID, int secondaryType, WebDriverBackedSelenium selenium) throws Exception {
         open(primaryType, primaryID, selenium);
         //go to secondary tab:
         createNewRelatedOfCurrent(secondaryType, selenium);
@@ -241,7 +243,7 @@ public class Utilities {
      * @param selenium The selenium object
      * @throws Exception
      */
-    public static void createNewRelatedOfCurrent(int secondaryType, Selenium selenium) throws Exception {
+    public static void createNewRelatedOfCurrent(int secondaryType, WebDriverBackedSelenium selenium) throws Exception {
         System.out.println("  createNewRelatedOfCurrent: secondary= " + Record.getRecordTypePP(secondaryType));
         String dialogSelector = ".cs-search-dialogFor-" + Record.getRecordTypeShort(secondaryType);
         //waitForRecordLoad(secondaryType, selenium); // JJM 2/15/12
@@ -262,7 +264,7 @@ public class Utilities {
      * @param selenium
      * @throws Exception
      */
-    public static void openRelatedOfCurrent(int secondaryType, String secondaryID, Selenium selenium) throws Exception {
+    public static void openRelatedOfCurrent(int secondaryType, String secondaryID, WebDriverBackedSelenium selenium) throws Exception {
         System.out.println("  openRelatedOfCurrent: secondary= " + Record.getRecordTypePP(secondaryType) + " recordID= " + secondaryID);
         String shortSecondaryIDName = Record.getRecordTypeShort(secondaryType);
 		if (shortSecondaryIDName.equals("movement")) {
@@ -280,7 +282,7 @@ public class Utilities {
         waitForRecordLoad(secondaryType, selenium);
     }
 
-    public static void openRelatedOf(int primaryType, String primaryID, int secondaryType, String secondaryID, Selenium selenium) throws Exception {
+    public static void openRelatedOf(int primaryType, String primaryID, int secondaryType, String secondaryID, WebDriverBackedSelenium selenium) throws Exception {
         System.out.println("  openRelatedOf: primary= " + Record.getRecordTypePP(primaryType) + " primaryID= " + primaryID +  
                 " secondary= " + Record.getRecordTypePP(secondaryType) + " secondaryID= " + secondaryID);
         open(primaryType, primaryID, selenium);
@@ -305,7 +307,7 @@ public class Utilities {
      * @param selenium The selenium object on which to run these actions
      * @throws Exception
      */
-    public static void navigateWarningClose(int primaryType, String modifiedID, Selenium selenium) throws Exception {
+    public static void navigateWarningClose(int primaryType, String modifiedID, WebDriverBackedSelenium selenium) throws Exception {
     	System.out.println("  navigateWarningClose: primary= " + Record.getRecordTypePP(primaryType) + " recordID= " + modifiedID);
         waitForRecordLoad(primaryType, selenium);
         //edit a field (ID field)
@@ -339,7 +341,7 @@ public class Utilities {
      * @param selenium The selenium object on which to run these actions
      * @throws Exception
      */
-    public static void navigateWarningSave(int primaryType, String modifiedID, Selenium selenium) throws Exception {
+    public static void navigateWarningSave(int primaryType, String modifiedID, WebDriverBackedSelenium selenium) throws Exception {
         System.out.println("  navigateWarningSave: primary= " + Record.getRecordTypePP(primaryType) + " recordID= " + modifiedID);
         waitForRecordLoad(primaryType, selenium);
         //edit field (ID field)
@@ -377,7 +379,7 @@ public class Utilities {
      * @param selenium The selenium object on which to run these actions
      * @throws Exception
      */
-    public static void navigateWarningDontSave(int primaryType, String modifiedID, Selenium selenium) throws Exception {
+    public static void navigateWarningDontSave(int primaryType, String modifiedID, WebDriverBackedSelenium selenium) throws Exception {
         System.out.println("  navigateWarningDontSave: primary= " + Record.getRecordTypePP(primaryType) + " recordID= " + modifiedID);
         waitForRecordLoad(primaryType, selenium);
         //edit ID field
@@ -410,7 +412,7 @@ public class Utilities {
      * @param recordID The value to put in the ID field
      * @param selenium The selenium object used to fill out the form
      */
-    public static void fillForm(int recordType, String recordID, Selenium selenium) {
+    public static void fillForm(int recordType, String recordID, WebDriverBackedSelenium selenium) {
         System.out.println("  fillForm: record= " + Record.getRecordTypePP(recordType) + " recordID= " + recordID);
         fillForm(recordType, recordID, Record.getFieldMap(recordType), Record.getSelectMap(recordType), Record.getDateMap(recordType), selenium);
     }
@@ -428,7 +430,7 @@ public class Utilities {
      * @param dateMap Map of selectors/dates to use in the date fields.
      * @param selenium The selenium object used to fill out the form
      */
-    public static void fillForm(int recordType, String recordID, HashMap<String, String> fieldMap, HashMap<String, String> selectMap, HashMap<String, String> dateMap, Selenium selenium) {
+    public static void fillForm(int recordType, String recordID, HashMap<String, String> fieldMap, HashMap<String, String> selectMap, HashMap<String, String> dateMap, WebDriverBackedSelenium selenium) {
         selenium.type(Record.getIDSelector(recordType), recordID);
 
         //fill out all fields:
@@ -490,7 +492,7 @@ public class Utilities {
      *
      * @param recordType The record type to clear
      */
-    public static void clearForm(int recordType, Selenium selenium) {
+    public static void clearForm(int recordType, WebDriverBackedSelenium selenium) {
         System.out.println("  clearForm: record= " + Record.getRecordTypePP(recordType));
         //clear ID field
         selenium.type(Record.getIDSelector(recordType), "");
@@ -536,7 +538,7 @@ public class Utilities {
      *
      * @param recordType The record type to fill out
      */
-    public static void verifyClear(int recordType, Selenium selenium) {
+    public static void verifyClear(int recordType, WebDriverBackedSelenium selenium) {
         System.out.println("  verifyClear: record= " + Record.getRecordTypePP(recordType));
         //check values of regular fields:
         HashMap<String, String> fieldMap = Record.getFieldMap(recordType);
@@ -586,7 +588,7 @@ public class Utilities {
      * @param recordID The value expected in the ID field
      * @param selenium The selenium object used to fill out the form
      */
-    public static void verifyFill(int recordType, String recordID, Selenium selenium) {
+    public static void verifyFill(int recordType, String recordID, WebDriverBackedSelenium selenium) {
         System.out.println("  verifyFill: record= " + Record.getRecordTypePP(recordType) + " recordID= " + recordID);
         verifyFill(recordType, recordID, Record.getFieldMap(recordType), Record.getSelectMap(recordType), Record.getDateMap(recordType), selenium);
     }
@@ -603,7 +605,7 @@ public class Utilities {
      * @param dateMap Map of selectors/dates to use in the date fields.
      * @param selenium The selenium object used to fill out the form
      */
-    public static void verifyFill(int recordType, String recordID, HashMap<String, String> fieldMap, HashMap<String, String> selectMap, HashMap<String, String> dateMap, Selenium selenium) {
+    public static void verifyFill(int recordType, String recordID, HashMap<String, String> fieldMap, HashMap<String, String> selectMap, HashMap<String, String> dateMap, WebDriverBackedSelenium selenium) {
         assertEquals(recordID, selenium.getValue(Record.getIDSelector(recordType)));
         //check values:
         Iterator<String> iterator = fieldMap.keySet().iterator();
@@ -648,13 +650,13 @@ public class Utilities {
         }
     }
 
-    public static void waitForRecordLoad(Selenium selenium) throws Exception {
+    public static void waitForRecordLoad(WebDriverBackedSelenium selenium) throws Exception {
         elementPresent("//input[@value='Select number pattern']", selenium);
         
 //        elementNotPresent("//select[option='Options not loaded']", selenium);
     }
 
-    public static void waitForRecordSave(Selenium selenium) throws Exception {
+    public static void waitForRecordSave(WebDriverBackedSelenium selenium) throws Exception {
         textPresent("successfully", selenium);
 //        elementNotPresent("//select[option='Options not loaded']", selenium);
     }
@@ -664,10 +666,10 @@ public class Utilities {
      * case of group, by the selector having got it's option values
      * 
      * @param recordType record type expected to load
-     * @param selenium a Selenium object to check with
+     * @param selenium a WebDriverBackedSelenium object to check with
      * @throws Exception
      */
-    public static void waitForRecordLoad(int recordType, Selenium selenium) throws Exception {
+    public static void waitForRecordLoad(int recordType, WebDriverBackedSelenium selenium) throws Exception {
         if (recordType == Record.GROUP) { //group doesn't have number picker
             elementPresent("//select[option='Decorative Arts']", selenium);
         } else {
@@ -683,7 +685,7 @@ public class Utilities {
      * @param selenium a Selenium object to check with
      * @throws Exception
      */
-    static final void textNotPresent(String text, Selenium selenium) throws Exception {
+    static final void textNotPresent(String text, WebDriverBackedSelenium selenium) throws Exception {
         for (int second = 0;; second++) {
             if (second >= MAX_WAIT_SEC) {
                 fail("textNotPresent: The text "+text+" stayed present - timeout");
@@ -702,10 +704,10 @@ public class Utilities {
      * Asserts that the text becomes present within MAX_WAIT_SEC
      *
      * @param text the text to check whether is present
-     * @param selenium  a Selenium object to check with
+     * @param selenium  a WebDriverBackedSelenium object to check with
      * @throws Exception
      */
-    static final void textPresent(String text, Selenium selenium, int timeout) throws Exception {
+    static final void textPresent(String text, WebDriverBackedSelenium selenium, int timeout) throws Exception {
         for (int second = 0;; second++) {
             if (second >= timeout) {
                 fail("textPresent: Unable to find text: "+text);
@@ -724,10 +726,10 @@ public class Utilities {
      * Asserts that the text becomes present within MAX_WAIT_SEC
      *
      * @param text the text to check whether is present
-     * @param selenium  a Selenium object to check with
+     * @param selenium  a WebDriverBackedSelenium object to check with
      * @throws Exception
      */
-    static final void textPresent(String text, Selenium selenium) throws Exception {
+    static final void textPresent(String text,WebDriverBackedSelenium selenium) throws Exception {
         textPresent(text, selenium, MAX_WAIT_SEC);
     }
 
@@ -737,10 +739,10 @@ public class Utilities {
      *
      * @param text the text to check whether is present
      * @param selector to the field that we want to check for the text in
-     * @param selenium  a Selenium object to check with
+     * @param selenium  aWebDriverBackedSelenium object to check with
      * @throws Exception
      */
-    static final void textPresent(String text, String selector, Selenium selenium) throws Exception {
+    static final void textPresent(String text, String selector,WebDriverBackedSelenium selenium) throws Exception {
         for (int second = 0;; second++) {
             if (second >= MAX_WAIT_SEC) {
                 fail("textPresent: Unable to find text "+text+" in field: "+selector);
@@ -759,10 +761,10 @@ public class Utilities {
      * Asserts that the element is NOT present within MAX_WAIT_SEC
      *
      * @param selector The selector for the element to check
-     * @param selenium a Selenium object to check with
+     * @param selenium aWebDriverBackedSelenium object to check with
      * @throws Exception
      */
-    static final void elementNotPresent(String selector, Selenium selenium) throws Exception {
+    static final void elementNotPresent(String selector,WebDriverBackedSelenium selenium) throws Exception {
         for (int second = 0;; second++) {
             if (second >= MAX_WAIT_SEC) {
                 fail("elementNotPresent: Element: "+selector+" stayed on page");
@@ -781,10 +783,10 @@ public class Utilities {
      * Asserts that the element is present within MAX_WAIT_SEC
      *
      * @param selector The selector for the element to check
-     * @param selenium a Selenium object to check with
+     * @param selenium aWebDriverBackedSelenium object to check with
      * @throws Exception
      */
-    static final void elementPresent(String selector, Selenium selenium) throws Exception {
+    static final void elementPresent(String selector,WebDriverBackedSelenium selenium) throws Exception {
         for (int second = 0;; second++) {
             if (second >= MAX_WAIT_SEC) {
                 fail("elementPresent: Unable to find element "+selector);

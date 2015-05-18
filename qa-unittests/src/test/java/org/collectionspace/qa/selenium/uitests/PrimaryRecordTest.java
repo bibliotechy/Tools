@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
@@ -16,15 +19,13 @@ import static org.collectionspace.qa.selenium.uitests.Utilities.*;
 import static org.junit.Assert.*;
 
 @RunWith(value = Parameterized.class)
-public class PrimaryRecordTests {
+public class PrimaryRecordTest {
 
-    static Selenium selenium;
+    static WebDriverBackedSelenium selenium;
     public static String AFTER_DELETE_URL = "findedit.html";
-    public static int PORT_NUM = 4444;
-    public static String BROWSER = "firefox";
     private int primaryType;
 
-    public PrimaryRecordTests(int number) {
+    public PrimaryRecordTest(int number) {
         this.primaryType = number;
     }
 
@@ -46,18 +47,14 @@ public class PrimaryRecordTests {
     }
 
     @BeforeClass
-    public static void init() throws Exception {	
+    public static void init() throws Exception {
+
+        WebDriver driver =new  FirefoxDriver();
         if (System.getProperty("baseurl") != null) {
             BASE_URL = System.getProperty("baseurl");
         }
-        if (System.getProperty("portnum") != null) {
-            PORT_NUM = Integer.parseInt(System.getProperty("portnum"));
-        }
-        if (System.getProperty("browser") != null) {
-            BROWSER = System.getProperty("browser");
-        }
-        selenium = new DefaultSelenium("localhost", PORT_NUM, BROWSER, BASE_URL);
-        selenium.start();
+        selenium = new WebDriverBackedSelenium(driver, BASE_URL);
+
 
         //log in:
         login(selenium);
