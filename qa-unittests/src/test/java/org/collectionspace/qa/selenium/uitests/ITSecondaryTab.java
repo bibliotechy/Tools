@@ -10,25 +10,30 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.*;
 import static org.collectionspace.qa.selenium.uitests.Utilities.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
+
 
 /**
  *
  * @author kasper
  */
 @RunWith(value = Parameterized.class)
-public class SecondaryTabTest {
+public class ITSecondaryTab {
 
     static WebDriverBackedSelenium selenium;
 
     private int primaryType, secondaryType;
     
 
-    public SecondaryTabTest(int primaryType, int secondaryType) {
+    public ITSecondaryTab(int primaryType, int secondaryType) {
         this.primaryType = primaryType;
         this.secondaryType = secondaryType;
     }
@@ -64,9 +69,9 @@ public class SecondaryTabTest {
         login(selenium);
         
         //autogenerate a movement record so that we have an urn::value to put in the required field
-//        String locationAuthorityURN = getLocationURN(selenium);
-//        System.out.println("URN: "+locationAuthorityURN);
-//        Record.setField(Record.MOVEMENT, Record.getRequiredFieldSelector(Record.MOVEMENT), locationAuthorityURN);
+        String locationAuthorityURN = getLocationURN(selenium);
+        System.out.println("URN: "+locationAuthorityURN);
+        Record.setField(Record.MOVEMENT, Record.getRequiredFieldSelector(Record.MOVEMENT), locationAuthorityURN);
     }
 
     /**
@@ -97,7 +102,9 @@ public class SecondaryTabTest {
         //got to secondary tab and create new
         createNewRelatedOfCurrent(secondaryType, selenium);
         //make sure required field is filled out
-        selenium.type(Record.getRequiredFieldSelector(secondaryType), secondaryID);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_WAIT_SEC);
+        WebElement required = wait.until(visibilityOfElementLocated(By.cssSelector(Record.getRequiredFieldSelector(secondaryType))));
+        required.sendKeys(secondaryID);
         //Test close and cancel buttons of dialog
         navigateWarningClose(secondaryType, secondaryID, selenium);
         //Test 'Save' button - expect it was properly saved
@@ -169,12 +176,12 @@ public class SecondaryTabTest {
         //open secondary tab and create new record in that
         createNewRelatedOfCurrent(secondaryType, selenium);
         //attempt saving and expect error message:
-        selenium.click("css=.csc-relatedRecordsTab-" + Record.getRecordTypeShort(secondaryType) + " .saveButton");
-		if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
-			selenium.click("css=.csc-confirmationDialog .saveButton");
-		}
-        elementPresent("CSS=.cs-message-error", selenium);
-        assertEquals(Record.getRequiredFieldMessage(secondaryType), selenium.getText("CSS=.cs-message-error #message"));
+        driver.findElement(By.cssSelector(".csc-relatedRecordsTab-" + Record.getRecordTypeShort(secondaryType) + " .saveButton")).click();
+        if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
+            driver.findElement(By.cssSelector(".csc-confirmationDialog .saveButton")).click();
+        }
+        elementPresent("css=.cs-message-error", selenium);
+        assertEquals(Record.getRequiredFieldMessage(secondaryType), selenium.getText("css=.cs-message-error #message"));
 
         //fill out form
         fillForm(secondaryType, secondaryID, selenium);
@@ -222,11 +229,7 @@ public class SecondaryTabTest {
         fillForm(secondaryType, secondaryID, selenium);
         //save record
         //log(Record.getRecordTypePP(secondaryType) + ": expect save success message and that all fields are valid\n");
-        save(selenium);
-        if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
-            selenium.click("css=.csc-confirmationDialog .saveButton");
-        }
-
+        successfulSave(selenium);
 
 
         String primaryID = Record.getRecordTypeShort(primaryType) + (new Date().getTime());
@@ -256,8 +259,8 @@ public class SecondaryTabTest {
 			selenium.click("css=.csc-confirmationDialog .saveButton");
 		}
         //expect error message due to missing required field\n");
-        elementPresent("CSS=.cs-message-error", selenium);
-        assertEquals(Record.getRequiredFieldMessage(secondaryType), selenium.getText("CSS=.cs-message-error #message"));
+        elementPresent("css=.cs-message-error", selenium);
+        assertEquals(Record.getRequiredFieldMessage(secondaryType), selenium.getText("css=.cs-message-error #message"));
         //Enter ID and make sure required field is filled out
         selenium.type(Record.getIDSelector(secondaryType), secondaryID);
         selenium.type(Record.getRequiredFieldSelector(secondaryType), secondaryID);

@@ -121,20 +121,20 @@ public class Record {
 				this.fieldMap.put("repeat::.csc-object-identification-other-number", "ok, 801");
 				this.selectMap.put("css=.csc-object-identification-other-number-type", "Lender");
 				this.fieldMap.put(".csc-object-identification-distinguishing-features", "It's a biiiiig page with lots of fields");
-				
+
 				this.selectMap.put("css=.csc-object-identification-responsible-department", "Media and Performance Art");
 				this.selectMap.put("css=.csc-object-identification-collection", "Permanent collection");
 				this.selectMap.put("css=.csc-object-identification-record-status", "In process");
 				this.fieldMap.put("repeat::.csc-object-identification-comments", "Ugh, and I'm at third textarea");
-		
+
 				//title
 				this.fieldMap.put("repeat::.csc-object-identification-object-title", "the is cataloging");
 				this.selectMap.put("css=.csc-object-identification-object-title-language", "Arabic");
-				
+
 				this.fieldMap.put("repeat::.csc-object-identification-object-title-translation", "cataloooooging");
 				this.selectMap.put("css=.csc-collection-object-titleTranslationLanguage", "Korean");
 				this.selectMap.put("css=.csc-object-identification-object-title-type", "Series");
-				
+
 				this.fieldMap.put("repeat::.csc-object-identification-object-name", "No idea");
 				this.selectMap.put("css=.csc-object-identification-object-currency", "Current");
 				this.selectMap.put("css=.csc-object-identification-object-level", "Subgroup");
@@ -142,40 +142,40 @@ public class Record {
 				this.selectMap.put("css=.csc-object-identification-object-type", "Denomination");
 				this.selectMap.put("css=.csc-object-identification-object-language", "Chinese");
 				this.fieldMap.put("repeat::.csc-object-identification-object-note", "Objects have lots of fields");
-		
+
 				//object description info
 				this.fieldMap.put(".csc-object-description-copy-number", "woohoo, second box");
 				this.fieldMap.put(".csc-object-description-edition-number", "second field of second box");
-				
+
 				this.selectMap.put("css=.csc-object-description-object-status", "holotype");
-				
+
 				this.fieldMap.put(".csc-object-description-age", "2");
 				this.selectMap.put("css=.csc-object-description-age-qualifier", "older than");
 				this.selectMap.put("css=.csc-object-description-age-unit", "Months");
-				
+
 				this.selectMap.put("css=.csc-object-description-sex", "female");
 				this.fieldMap.put("repeat::.csc-object-description-style", "biiiig");
-				
+
 				this.selectMap.put("css=.csc-object-description-phase", "imago");
 				this.fieldMap.put("repeat::.csc-object-description-color", "gray/whitish");
-		
+
 				this.selectMap.put("css=.csc-object-description-form", "pinned");
-		
+
 				this.fieldMap.put("repeat::.csc-object-description-material", "Computer");
 				this.fieldMap.put("repeat::.csc-object-description-material-component", "lots");
 				this.fieldMap.put("repeat::.csc-object-description-material-component-note", "even more omponents than fields");
 				this.fieldMap.put("repeat::.csc-object-description-material-name", "computer");
 				this.fieldMap.put("repeat::.csc-object-description-material-source", "toshiba");
-				
+
 				this.fieldMap.put(".csc-object-description-physical-description", "very biiiig");
-				
+
 				this.selectMap.put("css=.csc-object-description-object-component-name", "handle");
 				this.fieldMap.put("repeat::.csc-object-description-object-component-information", "yes, please");
-				
+
 				this.selectMap.put("css=.csc-object-description-technical-attribute", "magnetic tape type");
 				this.selectMap.put("css=.csc-object-description-technical-attribute-measurement", "metal");
 				this.selectMap.put("css=.csc-object-description-technical-attribute-unit", "rpm");
-				
+
 				//dimensions
 				//this.selectMap.put("css=.csc-object-description-dimension-part", "image size");
 				//this.fieldMap.put(".csc-collection-object-dimensionSummary", "I said it was huuuuge");
@@ -196,182 +196,182 @@ public class Record {
 				this.selectMap.put("css=.csc-dimension-measurementUnit", "millimeters");
 				this.fieldMap.put("repeat::.csc-dimension-valueQualifier", "karat?");
 				this.dateMap.put("repeat::.csc-dimension-valueDate", "2011-05-01");
-				
+
 				//content
 				this.fieldMap.put(".csc-object-description-content-description", "Just a lot of fields");
-				
+
 				this.selectMap.put("css=.csc-object-description-content-language", "Swahili");
 				this.fieldMap.put("repeat::.csc-object-description-content-people", "Me, myself and I");
-				
+
 				this.fieldMap.put("repeat::.csc-object-description-content-activity", "fill them out for testing");
 				this.vocabMap.put("repeat::.csc-object-description-content-person", "VOCAB");
-				
+
 				this.vocabMap.put("repeat::.csc-object-description-content-concept", "VOCAB");
 				this.fieldMap.put("repeat::.csc-object-description-content-place", "On my computer");
-				
+
 				//date
 				//this.dateMap.put(".csc-object-description-content-date", "2011-05-02");
-				
+
 				this.selectMap.put("css=.csc-object-description-content-script", "Roman cursive");
-				
+
 				this.selectMap.put("css=.csc-object-description-content-position", "front");
 				this.vocabMap.put("repeat::.csc-object-description-content-organization", "VOCAB");
-				
+
 				this.fieldMap.put("repeat::.csc-object-description-content-object", "Cataloging form");
 				this.selectMap.put("css=.csc-object-description-content-object-type", "Furniture");
-				
+
 				this.fieldMap.put("repeat::.csc-object-description-content-event-name", "auto QA");
 				this.fieldMap.put("repeat::.csc-object-description-content-event-name-type", "testing");
-				
+
 				this.fieldMap.put("repeat::.csc-object-description-content-other", "filling out fields");
 				this.fieldMap.put("repeat::.csc-object-description-content-other-type", "same same but different");
-				
+
 				this.fieldMap.put(".csc-object-description-content-note", "Ugh, not even half way through the form");
-				
+
 				//textual inscription
 				this.fieldMap.put("repeat::.csc-object-description-inscription-content", "Just complaints of how long this form is");
 
 				this.vocabMap.put("repeat::.csc-object-description-inscription-content-inscriber", "VOCAB");
 				this.selectMap.put("css=.csc-object-description-inscription-content-position", "inside");
-				
+
 				this.selectMap.put("css=.csc-object-description-inscription-content-language", "Korean");
 				this.selectMap.put("css=.csc-object-description-inscription-content-script", "Roman cursive");
-				
+
 				this.dateMap.put("repeat::.csc-object-description-inscription-content-date", "2011-05-03");
 				this.selectMap.put("css=.csc-object-description-inscription-content-type", "estate stamp");
-				
+
 				this.fieldMap.put("repeat::.csc-object-description-inscription-content-method", "bits and pieces");
-				
+
 				this.fieldMap.put("repeat::.csc-object-description-inscription-content-interpretation", "A very long form");
 				this.fieldMap.put("repeat::.csc-object-description-inscription-content-translation", "Donde esta la biblioteca");
 				this.fieldMap.put("repeat::.csc-object-description-inscription-content-transliteration", "That's not even a word");
-				
+
 				//non-textual inscription
 				this.fieldMap.put("repeat::.csc-object-description-inscription-description", "Some blocks with fields");
-				
+
 				this.vocabMap.put("repeat::.csc-object-description-inscription-description-inscriber", "VOCAB");
 				this.selectMap.put("css=.csc-object-description-inscription-description-position", "outside");
-				
+
 				this.dateMap.put("repeat::.csc-object-description-inscription-description-date", "2011-05-04");
 				this.selectMap.put("css=.csc-object-description-inscription-description-type", "label");
-				
+
 				this.fieldMap.put("repeat::.csc-object-description-inscription-description-method", "Filling them out");
-				
+
 				this.fieldMap.put("repeat::.csc-object-description-inscription-description-interpretation", "No idea");
-				
-				
+
+
 				//object production info
-				//date	
+				//date
 				//this.dateMap.put(".csc-object-production-date", "2011-05-05");
 				this.fieldMap.put("repeat::.csc-object-production-people", "Wooohoooo");
 				this.fieldMap.put("repeat::.csc-collection-object-objectProductionPeopleRole", "Made it to next box");
-				
+
 				this.fieldMap.put("repeat::.csc-object-production-technique", "and from the look of the scroller");
 				this.fieldMap.put("repeat::.csc-object-production-technique-type", "I'm almost half way");
-				
+
 				this.vocabMap.put("repeat::.csc-object-production-person", "VOCAB");
 				this.fieldMap.put("repeat::.csc-collection-object-objectProductionPersonRole", "I really hope the fields");
-				
+
 				this.fieldMap.put("repeat::.csc-object-production-place", "Below are bigger than these");
 				this.fieldMap.put("repeat::.csc-collection-object-objectProductionPlaceRole", "Huuuuuge textfields");
-				
+
 				this.vocabMap.put("repeat::.csc-object-production-organization", "VOCAB");
 				this.fieldMap.put("repeat::.csc-collection-object-objectProductionOrganizationRole", "that take up the whole page");
-				
+
 				this.fieldMap.put("repeat::.csc-object-production-reason", "to store cataloging records");
 				this.fieldMap.put(".csc-object-production-note", "None, relaly");
-				
-				
+
+
 				//object history - associations
 				this.fieldMap.put("repeat::.csc-collection-object-assocActivity", "Ugh");
 				this.fieldMap.put("repeat::.csc-collection-object-assocActivityType", "More small fields");
 				this.fieldMap.put("repeat::.csc-collection-object-assocActivityNote", "I count 14 of them");
-				
+
 				this.fieldMap.put(".csc-collection-object-assocEventName", "argh, ok cheated");
 				this.fieldMap.put(".csc-collection-object-assocEventNameType", "got bored with counting");
-				
+
 				this.fieldMap.put("repeat::.csc-collection-object-assocObject", "and that's on this side");
 				this.fieldMap.put("repeat::.csc-collection-object-assocObjectType", "only, and looks like");
 				this.fieldMap.put("repeat::.csc-collection-object-assocObjectNote", "there are more below");
-				
+
 				this.vocabMap.put("repeat::.csc-collection-object-assocConcept", "VOCAB");
 				this.fieldMap.put("repeat::.csc-collection-object-assocConceptType", "one");
 				this.fieldMap.put("repeat::.csc-collection-object-assocConceptNote", "two");
-				
+
 				this.fieldMap.put("repeat::.csc-collection-object-assocCulturalContext", "three");
 				this.fieldMap.put("repeat::.csc-collection-object-assocCulturalContextType", "four");
 				this.fieldMap.put("repeat::.csc-collection-object-assocCulturalContextNote", "five");
-				
+
 				this.vocabMap.put("repeat::.csc-collection-object-assocOrganization", "VOCAB");
 				this.fieldMap.put("repeat::.csc-collection-object-assocOrganizationType", "six");
 				this.fieldMap.put("repeat::.csc-collection-object-assocOrganizationNote", "seven");
-				
+
 				this.fieldMap.put("repeat::.csc-collection-object-assocPeople", "eight");
 				this.fieldMap.put("repeat::.csc-collection-object-assocPeopleType", "nine");
 				this.fieldMap.put("repeat::.csc-collection-object-assocPeopleNote", "ten");
-				
+
 				this.vocabMap.put("repeat::.csc-collection-object-assocPerson", "VOCAB");
 				this.fieldMap.put("repeat::.csc-collection-object-assocPersonType", "eleven");
 				this.fieldMap.put("repeat::.csc-collection-object-assocPersonNote", "twelve");
-				
+
 				this.fieldMap.put("repeat::.csc-collection-object-assocPlace", "Thirteen");
 				this.fieldMap.put("repeat::.csc-collection-object-assocPlaceType", "fourteen");
 				this.fieldMap.put("repeat::.csc-collection-object-assocPlaceNote", "eighteen");
-				
+
 				this.vocabMap.put("repeat::.csc-object-history-association-event-organization", "VOCAB");
-				
+
 				this.fieldMap.put("repeat::.csc-object-history-association-event-people", "wonder how many fields are left");
-				
+
 				this.vocabMap.put("repeat::.csc-object-history-association-event-person", "VOCAB");
-				
+
 				this.fieldMap.put("repeat::.csc-object-history-association-event-place", "200 fields left perhaps");
-				
+
 				this.fieldMap.put(".csc-collection-object-assocEventNote", "I hope less");
-				
+
 				this.dateMap.put("repeat::.csc-object-history-association-assocDate", "2011-05-06");
 				this.fieldMap.put("repeat::.csc-collection-object-assocDateType", "But you never no");
 				this.fieldMap.put("repeat::.csc-collection-object-assocDateNote", "Never ever");
-				
+
 				//object history
 				this.fieldMap.put(".csc-object-history-association-object-history-note", "Wohooo... big field");
-				
+
 				this.fieldMap.put("repeat::.csc-collection-object-usage", "and some smaller");
 				this.fieldMap.put("repeat::.csc-collection-object-usageNote", "down here");
-				
+
 				this.vocabMap.put("repeat::.csc-object-history-association-owner", "VOCAB");
-				
+
 				//structured date
 				//this.dateMap.put(".csc-object-history-association-ownershipDates", "2011-05-07");
-				
+
 				this.selectMap.put("css=.csc-object-history-association-access", "open");
-				
+
 				this.selectMap.put("css=.csc-object-history-association-category", "public");
-				
+
 				this.fieldMap.put(".csc-object-history-association-ownership-place", "Japan");
-				
+
 				this.selectMap.put("css=.csc-object-history-association-exchange-method", "purchase");
 				this.fieldMap.put(".csc-object-history-association-exchange-note", "note here");
 				this.selectMap.put("css=.csc-object-history-association-denomination", "Euro");
 				this.fieldMap.put(".csc-object-history-association-exchange-price-value", "2000000.87");
-				
-				
+
+
 				//object owner's contribution info
 				this.fieldMap.put(".csc-object-owner-experience", "almost at the end of this form");
 				this.fieldMap.put(".csc-object-owner-response", "Congratulations");
 				this.fieldMap.put("repeat::.csc-object-owner-reference", "so close");
 				this.fieldMap.put(".csc-object-owner-contribution-note", "I think there's less than 5 fields left");
-		
+
 				//object viewer's contribution info
 				this.fieldMap.put(".csc-object-viewer-role", "argh, ok, that was optimistic");
 				this.fieldMap.put(".csc-object-viewer-experience", "some experience");
 				this.fieldMap.put(".csc-object-viewer-response", "some response");
 				this.fieldMap.put("repeat::.csc-object-viewer-reference", "What's up with all these references");
 				this.fieldMap.put(".csc-object-viewer-contribution-note", "Good job");
-				
+
 				//ref info
 				this.vocabMap.put("repeat::.csc-collection-object-reference", "VOCAB");
 				this.fieldMap.put("repeat::.csc-collection-object-referenceNote", "why are there so many of these");
-				
+
 				//object collection info
 				this.dateMap.put(".csc-collection-object-fieldCollectionDate", "2011-05-09");
 				this.selectMap.put("css=.csc-collection-object-fieldCollectionMethod", "purchased");
@@ -382,9 +382,9 @@ public class Record {
 				this.vocabMap.put("repeat::.csc-collection-object-fieldCollectionSource", "VOCAB");
 				this.vocabMap.put("repeat::.csc-collection-object-fieldCollector", "VOCAB");
 				this.fieldMap.put("repeat::.csc-collection-object-fieldColEventName", "Oooooh, three left");
-	
+
                 break;
-                
+
             case INTAKE:
             this.url = "intake.html";
                 this.shortname = "intake";
@@ -447,7 +447,7 @@ public class Record {
 
                 this.vocabMap.put(".csc-group-owner", "VOCAB");
                 break;
-                
+
             case LOAN_IN:
                 this.url = "loanin.html";
                 this.shortname = "loanin";
@@ -456,25 +456,25 @@ public class Record {
                 this.requiredFieldSelector = ".csc-loanIn-loanInNumber";
                 this.requiredFieldMessage = "Please specify a Loan In Number";
                 this.generatedPostfix = " - loanInNumber";
-				
+
 				//this.selectMap.put("css=.csc-loanIn-loanPurpose", "Photography");
-				
+
 				//this.selectMap.put("css=.csc-loanin-loanStatus", "Sent");
 				this.fieldMap.put("repeat::.csc-loanin-loanStatusNote", "Some Loan Status Note");
 				this.dateMap.put("repeat::.csc-loanin-loanStatusDate", "2011-06-04");
-				
+
 				this.vocabMap.put("repeat::.csc-loanIn-lendersContact", "VOCAB");
 				this.vocabMap.put("repeat::.csc-loanIn-lender", "VOCAB");
 				this.vocabMap.put("repeat::.csc-loanIn-lendersAuthorizer", "VOCAB");
 				this.dateMap.put("repeat::.csc-loanIn-lendersAuthorizerDate", "2011-05-05");
-				
+
 				this.vocabMap.put(".csc-loanin-borrowersContact", "VOCAB");
 				this.vocabMap.put(".csc-loanin-borrowersAuthorizer", "VOCAB");
 				this.dateMap.put(".csc-loanin-borrowersAuthorizationDate", "2011-06-05");
-					
+
 				this.fieldMap.put(".csc-loanIn-loanInNote", "Some Loan in Note");
 				this.fieldMap.put(".csc-loanIn-loanInConditions", "Some Conditions");
-        	
+
 				//this.vocabMap.put(".csc-loanIn-loanInContact", "VOCAB");
 
 				this.dateMap.put(".csc-loanIn-loanInDate", "2011-05-04");
@@ -511,7 +511,7 @@ public class Record {
                 this.selectMap.put("css=.csc-loanOut-loanPurpose", "Analysis");
                 this.selectMap.put("css=.csc-loanOut-loanedObjectStatus", "Photography requested");
                 break;
-              
+
             case ACQUISITION:
                 this.url = "acquisition.html";
                 this.shortname = "acquisition";
@@ -536,7 +536,7 @@ public class Record {
                 this.fieldMap.put("repeat::.csc-acquisition-fieldCollectionEventName", "Abracadabre");
 
 				// removing due to becoming structured date
-                //this.dateMap.put(".csc-acquisition-accession-date", "2011-04-19"); 
+                //this.dateMap.put(".csc-acquisition-accession-date", "2011-04-19");
                 this.dateMap.put(".csc-acquisition-acquisitionAuthorizerDate", "2011-04-20");
 				// removing due to becoming structured date
                 //this.dateMap.put("repeat::.csc-acquisition-date", "2011-04-21");
@@ -554,7 +554,7 @@ public class Record {
                 this.selectMap.put("css=.csc-acquisition-original-object-purchase-price-currency", "Canadian Dollar");
                 this.selectMap.put("css=.csc-acquisition-acquisitionFundingCurrency", "Danish Krone");
                 break;
-                                
+
             case MOVEMENT:
                 this.url = "movement.html";
                 this.shortname = "movement";
@@ -565,22 +565,22 @@ public class Record {
                 this.requiredFieldMessage = "Please specify a Current Location";
                 this.generatedPostfix = " - movementReferenceNumber";
 
-		this.dateMap.put(".csc-movement-removalDate", "2011-05-05");
-		this.dateMap.put(".csc-movement-plannedRemovalDate", "2011-05-04");
-		this.dateMap.put(".csc-movement-locationDate", "2011-05-03");
-		this.fieldMap.put(".csc-movement-currentLocationNote", "Random note");
+				this.fieldMap.put(".csc-movement-currentLocationNote", "Random note");
+				this.fieldMap.put(".csc-movement-movementNote", "Another random note");
 
-		this.fieldMap.put(".csc-movement-movementNote", "Another random note");
-		//Changed value of .csc-movement-currentLocation from "some ref num" to VOCAB - JJM 2/15/12
-                this.vocabMap.put(".csc-movement-currentLocation", "VOCAB");                
-                
-		this.selectMap.put("css=.csc-movement-currentLocationFitness", "Temporary");
-		this.selectMap.put("css=.csc-movement-movementMethods", "Handcarried");
-		this.selectMap.put("css=.csc-movement-reasonForMove", "Inventory");
+				this.selectMap.put("css=.csc-movement-currentLocationFitness", "Temporary");
+				this.selectMap.put("css=.csc-movement-movementMethods", "Handcarried");
+				this.selectMap.put("css=.csc-movement-reasonForMove", "Inventory");
 
-                this.vocabMap.put(".csc-movement-normalLocation", "VOCAB");		
-		this.vocabMap.put(".csc-movement-movementContact", "VOCAB");
-                break;
+				this.dateMap.put(".csc-movement-removalDate", "2011-05-05");
+				this.dateMap.put(".csc-movement-plannedRemovalDate", "2011-05-04");
+				this.dateMap.put(".csc-movement-locationDate", "2011-05-03");
+
+
+				this.vocabMap.put(".csc-movement-normalLocation", "VOCAB");
+				this.vocabMap.put(".csc-movement-movementContact", "VOCAB");
+				this.vocabMap.put(".csc-movement-currentLocation", "VOCAB");
+				break;
 
             case MEDIA:
                 this.url = "Media.html";
@@ -592,31 +592,31 @@ public class Record {
                 this.generatedPostfix = " - identificationNumber";
 
 				this.fieldMap.put(".csc-media-title", "Mediarrrrgh");
-				
+
 				this.vocabMap.put(".csc-media-contributor", "VOCAB");
 				this.selectMap.put("css=.csc-media-type", "Document");
-				
+
 				this.vocabMap.put(".csc-media-creator", "VOCAB");
 				this.fieldMap.put(".csc-media-coverage", "All over");
-				
+
 				this.selectMap.put("css=.csc-media-language", "Russian");
 				//dates
-				
+
 				this.vocabMap.put(".csc-media-publisher", "VOCAB");
 				this.fieldMap.put(".csc-media-source", "Someone somewhere in the mountains");
-				
+
 				this.fieldMap.put("repeat::.csc-media-relation", "None");
 				this.fieldMap.put("repeat::.csc-media-subject", "Got no idea");
-				
+
 				this.fieldMap.put(".csc-media-copyrightStatement", "Use at will");
 				this.vocabMap.put(".csc-media-rightsHolder", "VOCAB");
-				
+
 				this.fieldMap.put(".csc-media-description", "This is some random media ...");
-				
+
 				//dimension
 				this.selectMap.put("css=.csc-dimension-measuredPart", "mount");
 				this.fieldMap.put("repeat::.csc-dimension-dimensionSummary", "No clue");
-				
+
 				this.selectMap.put("css=.csc-dimension-dimension", "count");
 				this.fieldMap.put("repeat::.csc-dimension-value", "22.1");
 				this.selectMap.put("css=.csc-dimension-measurementMethod", "Protractor");
@@ -624,12 +624,12 @@ public class Record {
 				this.selectMap.put("css=.csc-dimension-measurementUnit", "millimeters");
 				this.fieldMap.put("repeat::.csc-dimension-valueQualifier", "karat?");
 				this.dateMap.put("repeat::.csc-dimension-valueDate", "2011-05-01");
-				
+
 				//this.dateMap.put("repeat::.csc-media-date", "2011-05-02");
 				//this.selectMap.put("css=.csc-media-dimension", "Running Time");
 
                 break;
-                
+
             case OBJECT_EXIT:
                 this.url = "objectexit.html";
                 this.shortname = "objectexit";
@@ -638,7 +638,7 @@ public class Record {
                 this.requiredFieldSelector = ".csc-objectexit-exitNumber";
                 this.requiredFieldMessage = "Please specify an Exit Number";
                 this.generatedPostfix = " - exitNumber";
-				
+
 				// removing due to becoming structured date
                 //this.dateMap.put(".csc-objectexit-exitDate", "2011-05-05");
 

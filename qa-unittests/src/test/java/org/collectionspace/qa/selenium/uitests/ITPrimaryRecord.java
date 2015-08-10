@@ -1,31 +1,35 @@
 package org.collectionspace.qa.selenium.uitests;
 
-import com.thoughtworks.selenium.*;
+
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
+import org.junit.AfterClass;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.collectionspace.qa.selenium.uitests.Utilities.*;
 import static org.junit.Assert.*;
 
 @RunWith(value = Parameterized.class)
-public class PrimaryRecordTest {
+public class ITPrimaryRecord {
 
     static WebDriverBackedSelenium selenium;
     public static String AFTER_DELETE_URL = "findedit.html";
     private int primaryType;
 
-    public PrimaryRecordTest(int number) {
+    public ITPrimaryRecord(int number) {
         this.primaryType = number;
     }
 
@@ -46,10 +50,17 @@ public class PrimaryRecordTest {
         return Arrays.asList(data);
     }
 
+    @AfterClass
+    public static void teardown() throws Exception {
+        selenium.close();
+    }
+
     @BeforeClass
     public static void init() throws Exception {
 
-        WebDriver driver =new  FirefoxDriver();
+        //System.setProperty("webdriver.chrome.driver","/home/cbn/projects/cspace/Tools/qa-unittests/lib/chromedriver" );
+        //WebDriver driver =new ChromeDriver();
+        WebDriver driver =new FirefoxDriver();
         if (System.getProperty("baseurl") != null) {
             BASE_URL = System.getProperty("baseurl");
         }
@@ -63,6 +74,7 @@ public class PrimaryRecordTest {
         String locationAuthorityURN = getLocationURN(selenium);
         System.out.println("URN for location authority: "+locationAuthorityURN);
         Record.setField(Record.MOVEMENT, Record.getRequiredFieldSelector(Record.MOVEMENT), locationAuthorityURN);
+
     }
 
     /**
@@ -108,13 +120,12 @@ public class PrimaryRecordTest {
         waitForRecordLoad(primaryType, selenium);
 
         fillForm(primaryType, primaryID, selenium);
+
         //save record
         log("  " + Record.getRecordTypePP(primaryType) + ": expect save success message and that all fields are valid\n");
-		save(selenium);
-		if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
-			selenium.click("css=.csc-confirmationDialog .saveButton");
-		}
-        //check values:
+        successfulSave(selenium);
+
+
         verifyFill(primaryType, primaryID, selenium);
         //Uncomment below for debugging - gives you 30 secs to check everything is working
         //Thread.sleep(1000 * 30);
@@ -151,30 +162,19 @@ public class PrimaryRecordTest {
         fillForm(primaryType, generatedID, selenium);
         //save record
         //log(Record.getRecordTypePP(primaryType) + ": expect save success message and that all fields are valid\n");
-        save(selenium);
-        if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
-            selenium.click("css=.csc-confirmationDialog .saveButton");
-        }
+        successfulSave(selenium);
 
-
-        //goto some collectionspace page with a search box - and open new record
-        //selenium.open("createnew.html");        
-        //open(primaryType, generatedID, selenium);
         //Delete contents of all fields:
         clearForm(primaryType, selenium);
-        //save record - and expect error due to missing ID
-        selenium.click("//input[@value='Save']"); 
-		if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
-			selenium.click("css=.csc-confirmationDialog .saveButton");
-		}
-        //expect error message due to missing required field\n");
-        elementPresent("CSS=.cs-message-error", selenium);
-        assertEquals(Record.getRequiredFieldMessage(primaryType), selenium.getText("CSS=.cs-message-error #message"));
+
+        failedSave(selenium, primaryType);
+
         //Enter ID and save - expect successful
         selenium.type(Record.getIDSelector(primaryType), generatedID);
         //Also make sure that required field is filled out -- put generatedID in this field too
         selenium.type(Record.getRequiredFieldSelector(primaryType), generatedID);
-        save(selenium);
+
+        successfulSave(selenium);
         //check values:
         verifyClear(primaryType, selenium);
         System.out.println("* Ending test: testRemovingValues");
@@ -254,14 +254,19 @@ public class PrimaryRecordTest {
         String uniqueID = Record.getRecordTypeShort(primaryType) + (new Date().getTime());
         createAndSave(primaryType, uniqueID, selenium);
         fillForm(primaryType, uniqueID, selenium);
-        save(selenium);
-        //modify all fields
-        clearForm(primaryType, selenium);
-        //click cancel and expect content to change to original\n");
-        selenium.click("//input[@value='Cancel changes']");
-        //Wait a few seconds for page to reload. Records with small number of fields
-        //may get false positives
         Thread.sleep(3000);
+        successfulSave(selenium);
+        //modify all fields
+
+        clearForm(primaryType, selenium);
+        Thread.sleep(5000);
+        //click cancel and expect content to change to original\n");
+        //selenium.click("//input[@value='Cancel changes']");
+
+        clickCancel(driver);
+        Thread.sleep(3000);
+
+        waitUntilAllFieldsFilled(primaryType, uniqueID, selenium.getWrappedDriver());
         verifyFill(primaryType, uniqueID, selenium);
         System.out.println("* Ending test: testCancel");
     }

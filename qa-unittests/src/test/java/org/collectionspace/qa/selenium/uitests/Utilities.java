@@ -1,14 +1,28 @@
 package org.collectionspace.qa.selenium.uitests;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.thoughtworks.selenium.*;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.WrapsDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
+
+import org.openqa.selenium.support.ui.*;
+import org.openqa.selenium.JavascriptExecutor;
+
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import static org.junit.Assert.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
+
 
 public class Utilities {
 
@@ -16,9 +30,11 @@ public class Utilities {
             LOGIN_URL = "index.html",
             LOGIN_USER = "admin@core.collectionspace.org",
             LOGIN_PASS = "Administrator",
-            MAX_WAIT = "30000";
-    public static int MAX_WAIT_SEC = 30;
+            MAX_WAIT = "10000";
+    public static int MAX_WAIT_SEC = 10;
     public static String LOGIN_REDIRECT = "findedit.html";
+    public static WebDriver driver;
+
 
     /**
      * Logs in to collectionspace as LOGIN_USER with LOGIN_PASS
@@ -75,7 +91,7 @@ public class Utilities {
         String selector = "xpath=//a[text()=\"" + primaryID + "\"]";
 
         System.out.println("    checking whether " + selector + " is present");
-        
+
         //go to the record again:
         elementPresent(selector, selenium);
         Thread.sleep(2000);
@@ -157,13 +173,37 @@ public class Utilities {
      */
     public static void save(WebDriverBackedSelenium selenium) throws Exception {
         //save record
-        selenium.click("//input[@value='Save']");
-		if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
-			selenium.click("css=.csc-confirmationDialog .saveButton");
-		}
+        driver = selenium.getWrappedDriver();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebElement save =  wait.until(elementToBeClickable(By.id("save-1")));
+
+        save.click();
+        if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
+            driver.findElement(By.cssSelector(".csc-confirmationDialog .saveButton")).click();
+        }
+
+
+
+    }
+
+    public static void successfulSave(WebDriverBackedSelenium selenium) throws Exception{
+        save(selenium);
         waitForRecordSave(selenium);
     }
 
+
+    /**
+     *  Performs a save that is expected to fail.
+     *
+     * @param selenium Webdriver object
+     * @param primaryType The type of object on which the test is being performed.
+     * @throws Exception
+     */
+    public static void failedSave(WebDriverBackedSelenium selenium, Integer primaryType) throws Exception {
+        save(selenium);
+        elementPresent("css=.cs-message-error", selenium);
+        assertEquals(Record.getRequiredFieldMessage(primaryType), selenium.getText("css=.cs-message-error #message"));
+    }
 
     /**
      * FIXME: needs proper description
@@ -178,9 +218,10 @@ public class Utilities {
      * @throws Exception
      */
     public static void saveSecondary(int secondaryType, String secondaryID, WebDriverBackedSelenium selenium) throws Exception {
-        selenium.click("css=.csc-relatedRecordsTab-" + Record.getRecordTypeShort(secondaryType) + " .saveButton");
+        driver = selenium.getWrappedDriver();
+        driver.findElement(By.cssSelector(".csc-relatedRecordsTab-" + Record.getRecordTypeShort(secondaryType) + " .saveButton")).click();
 		if (selenium.isElementPresent("css=.csc-confirmationDialog .saveButton")){
-			selenium.click("css=.csc-confirmationDialog .saveButton");
+            driver.findElement(By.cssSelector(".csc-confirmationDialog .saveButton")).click();
 		}
         //due to bug, expect record to be dismissed
         textNotPresent("Select number pattern", selenium);
@@ -245,10 +286,12 @@ public class Utilities {
      */
     public static void createNewRelatedOfCurrent(int secondaryType, WebDriverBackedSelenium selenium) throws Exception {
         System.out.println("  createNewRelatedOfCurrent: secondary= " + Record.getRecordTypePP(secondaryType));
+        WebDriverWait wait = new WebDriverWait(selenium.getWrappedDriver(), MAX_WAIT_SEC);
         String dialogSelector = ".cs-search-dialogFor-" + Record.getRecordTypeShort(secondaryType);
         //waitForRecordLoad(secondaryType, selenium); // JJM 2/15/12
         //go to secondary tab:
-        selenium.click("link=" + Record.getRecordTypeTabName(secondaryType));
+        wait.until(visibilityOfElementLocated(By.linkText(Record.getRecordTypeTabName(secondaryType)))).click();
+
         elementPresent("//input[@value='Add record']", selenium);
         selenium.click("//input[@value='Add record']");
         elementPresent("css=" + dialogSelector + " :input[value='Create']", selenium);
@@ -283,7 +326,7 @@ public class Utilities {
     }
 
     public static void openRelatedOf(int primaryType, String primaryID, int secondaryType, String secondaryID, WebDriverBackedSelenium selenium) throws Exception {
-        System.out.println("  openRelatedOf: primary= " + Record.getRecordTypePP(primaryType) + " primaryID= " + primaryID +  
+        System.out.println("  openRelatedOf: primary= " + Record.getRecordTypePP(primaryType) + " primaryID= " + primaryID +
                 " secondary= " + Record.getRecordTypePP(secondaryType) + " secondaryID= " + secondaryID);
         open(primaryType, primaryID, selenium);
         //go to secondary tab:
@@ -402,6 +445,80 @@ public class Utilities {
         assertFalse(selenium.isElementPresent("link=" + modifiedID));
     }
 
+
+    public static void waitUntilAllFieldsFilled(int recordType, String recordID, WebDriver driver){
+        waitUntilAllFieldsFilled(recordType, recordID, Record.getFieldMap(recordType), Record.getSelectMap(recordType), Record.getDateMap(recordType), driver);
+    }
+
+    public static void waitUntilAllFieldsFilled(int recordType, String recordID, HashMap<String, String> fieldMap, HashMap<String, String> selectMap, HashMap<String, String> dateMap, WebDriver driver){
+        Integer maxWait = (recordType == 0) ? 120 : MAX_WAIT_SEC;
+        String selector;
+        Iterator<String> iterator;
+
+        waitUntilFieldIsFilled(driver, Record.getIDSelector(recordType), recordID, maxWait);
+
+        iterator = fieldMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            selector = iterator.next();
+            waitUntilFieldIsFilled(driver, selector, fieldMap.get(selector), maxWait);
+        }
+        iterator = dateMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            selector = iterator.next();
+            waitUntilFieldIsFilled(driver, selector, dateMap.get(selector), maxWait, "dateMap");
+        }
+        // Should have logic for selectMap too.
+
+
+    }
+
+
+
+    public static String jsToCheckIfFieldFilled(String fieldID, String expectedValue, String mapType){
+        String js;
+        String escapedFieldID = fieldID.replace(".", "\\\\.").replace(":", "\\\\:");
+        if (mapType.equals("dateMap")) {
+            // Date fields entered as YYYY-MM-DD have T00:00:00.000Z appended to the end, so we cannot check
+            // against our supplied values. So we only take the first 10 chars
+            js = "return jQuery('#" + escapedFieldID + "').val().slice(0,10) == '" + expectedValue + "'";
+        } else {
+            js = "return jQuery('#" + escapedFieldID + "').val() == '" + expectedValue + "'";
+        }
+            return js;
+    }
+
+
+    public static void waitUntilFieldIsFilled(WebDriver driver, String fieldID, String expectedValue, int maxWait){
+        waitUntilFieldIsFilled(driver, fieldID, expectedValue, MAX_WAIT_SEC, "fieldMap");
+    }
+
+    public static void waitUntilFieldIsFilled(WebDriver driver, String fieldID, String expectedValue, int maxWait, String mapType){
+        final String js = jsToCheckIfFieldFilled(fieldID, expectedValue, mapType);
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, maxWait);
+            wait.until(new ExpectedCondition<Boolean>() {
+                           public Boolean apply(WebDriver d) {
+                               JavascriptExecutor jsExec = (JavascriptExecutor) d;
+                               return (Boolean) jsExec.executeScript(js);
+                           }
+                       }
+            );
+        } catch (Exception e) {
+            System.out.println(js + " did not return true");
+        }
+    }
+
+    public static void clickCancel(WebDriver driver) {
+        System.out.println("Clicking Cancel");
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        wait.until(elementToBeClickable(By.id("cancel")));
+        driver.findElement(By.id("cancel")).click();
+        wait.until(not(elementToBeClickable(By.id("cancel"))));
+        System.out.println("Cancel clicked");
+    }
+
+
     /**
      * Fills out the fields of the given record type with the given recordID string as ID
      * and the default values of that record type.
@@ -431,39 +548,45 @@ public class Utilities {
      * @param selenium The selenium object used to fill out the form
      */
     public static void fillForm(int recordType, String recordID, HashMap<String, String> fieldMap, HashMap<String, String> selectMap, HashMap<String, String> dateMap, WebDriverBackedSelenium selenium) {
-        selenium.type(Record.getIDSelector(recordType), recordID);
+        Integer maxWait = (recordType == 0) ? 120 : MAX_WAIT_SEC;
+        driver = selenium.getWrappedDriver();
+        String selector;
+
+        WebElement idElement = driver.findElement(By.id(Record.getIDSelector(recordType)));
+        String idVal = idElement.getAttribute("value");
+        if (!idVal.equals(recordID)){
+            idElement.sendKeys(recordID);
+        }
+
 
         //fill out all fields:
         Iterator<String> iterator = fieldMap.keySet().iterator();
         while (iterator.hasNext()) {
-            String selector = iterator.next();
-            //System.out.println("changing " + selector + " to " + fieldMap.get(selector) + " modified");
-            selenium.type(selector, fieldMap.get(selector));
+            selector = iterator.next();
+            System.out.println("changing " + selector + " to " + fieldMap.get(selector) + " modified");
+            //selenium.type(selector, fieldMap.get(selector));
+            driver.findElement(By.id(selector)).sendKeys(fieldMap.get(selector));
+
         }
+
+
         //fill out all dates:
         iterator = dateMap.keySet().iterator();
         while (iterator.hasNext()) {
-            String selector = iterator.next();
-            selenium.type(selector, dateMap.get(selector));
+            selector = iterator.next();
+            driver.findElement(By.id(selector)).sendKeys(dateMap.get(selector));
+
         }
         //select from all select boxes
         iterator = selectMap.keySet().iterator();
         while (iterator.hasNext()) {
-            String selector = iterator.next();
-            try {
-                //make sure options for select box are loaded (and not Options Not Loaded)
-                //and yes, this is indeed a very nasty xpath selector, but:
-                //The option= predicate was required to make ensure that the options were loaded                
-                //The contains predicate was required, since the options-loaded checker didn't work if several dropdowns contained the value checked for
-                //       the entire normalize, etc. was required due to multiple classes..
-                //we need class selector without "." in the beginning, so remove if present
-                String classNameOnly = selector.startsWith("css=.")?selector.substring(5):selector;
-                elementPresent("//select[contains(@class, '"+classNameOnly+"') and option='"+selectMap.get(selector)+"']", selenium);
-//                elementPresent("//select[option='"+selectMap.get(selector)+"']", selenium);
-            } catch (Exception e) {
-                System.out.println("    ERROR -- ELEMENT NOT PRESENT");
-            }
+            selector = iterator.next();
+            String classNameOnly = selector.startsWith("css=.")?selector.substring(5):selector;
+            Select select = new Select(driver.findElement(By.className(classNameOnly)));
+            assertTrue("Multiple options present", select.getOptions().size() > 1);
+            select.selectByVisibleText(selectMap.get(selector));
             selenium.select(selector, "label=" + selectMap.get(selector));
+
         }
 
         //HACK added hardcoded values for movement record because this record type
@@ -472,17 +595,9 @@ public class Utilities {
             selenium.type(".csc-movement-currentLocation", "Shelf 4b");
             selenium.type(".csc-movement-movementContact", "Frank Sinatra");
             selenium.type(".csc-movement-normalLocation", "Under the sink");
-            //check if location record exists
-            /*if (selenium.isElementPresent("xpath=//span[text()='Shelf 4b']")){
-                System.out.println("    found term \"Shelf 4b\"");
-                selenium.click("xpath=//span[text()='Shelf 4b']");
-            } else if (selenium.isElementPresent("xpath=//li[text()='Local Storage Locations']")){
-                System.out.println("    added term \"Shelf 4b\" to Local Storage Locations authority");
-                selenium.click("xpath=//li[text()='Local Storage Locations']");
-            }
-            System.out.println("******************* END MOVEMENT BLOCK ********************");
-            */
         }
+
+        waitUntilAllFieldsFilled(recordType, recordID, driver);
     }
 
     /**
@@ -493,40 +608,51 @@ public class Utilities {
      * @param recordType The record type to clear
      */
     public static void clearForm(int recordType, WebDriverBackedSelenium selenium) {
+        driver = selenium.getWrappedDriver();
+        String selector;
+
         System.out.println("  clearForm: record= " + Record.getRecordTypePP(recordType));
         //clear ID field
-        selenium.type(Record.getIDSelector(recordType), "");
+        driver.findElement(By.id(Record.getIDSelector(recordType))).clear();
 
         //clear all regular fields
         HashMap<String, String> fieldMap = Record.getFieldMap(recordType);
+
         Iterator<String> iterator = fieldMap.keySet().iterator();
         while (iterator.hasNext()) {
-            String selector = iterator.next();
-            selenium.type(selector, "");
+            selector = iterator.next();
+            WebElement element= driver.findElement(By.id(selector));
+            element.clear();
+
         }
+
         // clear all date fields
         HashMap<String, String> dateMap = Record.getDateMap(recordType);
         iterator = dateMap.keySet().iterator();
         while (iterator.hasNext()) {
-            String selector = iterator.next();
-            selenium.type(selector, "");
+            selector = iterator.next();
+            WebElement element= driver.findElement(By.id(selector));
+            element.clear();
         }
         // clear all vocab fields
         HashMap<String, String> vocabMap = Record.getVocabMap(recordType);
         iterator = vocabMap.keySet().iterator();
         while (iterator.hasNext()) {
-            String selector = iterator.next();
+            selector = iterator.next();
             selenium.type(selector, "");
+            //WebElement element= driver.findElement(By.id(selector));
+            //element.clear();
         }
         HashMap<String, String> selectMap = Record.getSelectMap(recordType);
         //select from all select boxes
         iterator = selectMap.keySet().iterator();
         while (iterator.hasNext()) {
-            String selector = iterator.next();
+            selector = iterator.next();
             //System.out.println("CLEARING FIELD: "+selector);
             selenium.select(selector, "index=0");
             //System.out.println("READING FIELD: "+selector+" VALUE: "+Integer.parseInt(selenium.getSelectedIndex(selector)));
         }
+
     }
 
     /**
@@ -539,8 +665,11 @@ public class Utilities {
      * @param recordType The record type to fill out
      */
     public static void verifyClear(int recordType, WebDriverBackedSelenium selenium) {
+        driver = selenium.getWrappedDriver();
+
         System.out.println("  verifyClear: record= " + Record.getRecordTypePP(recordType));
         //check values of regular fields:
+
         HashMap<String, String> fieldMap = Record.getFieldMap(recordType);
         Iterator<String> iterator = fieldMap.keySet().iterator();
         while (iterator.hasNext()) {
@@ -548,7 +677,8 @@ public class Utilities {
             //dont expect required field to be empty:
             if (!selector.equals(Record.getRequiredFieldSelector(recordType))) {
                 //System.out.println("CHECKING FIELD: "+selector + " VALUE: " + selenium.getValue(selector));
-                assertEquals("checking for field: " + selector, "", selenium.getValue(selector));
+                WebElement element = driver.findElement(By.id(selector));
+                assertEquals("checking for field: " + selector, "", element.getAttribute("value"));
             }
         }
         //check values of date fields:
@@ -606,7 +736,11 @@ public class Utilities {
      * @param selenium The selenium object used to fill out the form
      */
     public static void verifyFill(int recordType, String recordID, HashMap<String, String> fieldMap, HashMap<String, String> selectMap, HashMap<String, String> dateMap, WebDriverBackedSelenium selenium) {
-        assertEquals(recordID, selenium.getValue(Record.getIDSelector(recordType)));
+        driver = selenium.getWrappedDriver();
+
+        WebElement actualID = driver.findElement(By.id(Record.getIDSelector(recordType)));
+        assertEquals(recordID, actualID.getAttribute("value"));
+
         //check values:
         Iterator<String> iterator = fieldMap.keySet().iterator();
         while (iterator.hasNext()) {
@@ -617,7 +751,9 @@ public class Utilities {
                 System.out.println("    accepting .csc-movement-currentLocation");
                 continue;
             }
-            assertEquals("checking for field: " + selector, fieldMap.get(selector), selenium.getValue(selector));
+
+            WebElement element = driver.findElement(By.id(selector));
+            assertEquals("checking for field: " + selector, fieldMap.get(selector), element.getAttribute("value"));
         }
         iterator = dateMap.keySet().iterator();
         while (iterator.hasNext()) {
@@ -632,21 +768,10 @@ public class Utilities {
         iterator = selectMap.keySet().iterator();
         while (iterator.hasNext()) {
             String selector = iterator.next();
-            try {
-                //make sure options for select box are loaded (and not Options Not Loaded)
-                //and yes, this is indeed a very nasty xpath selector, but:
-                //The option= predicate was required to make ensure that the options were loaded                
-                //The contains predicate was required, since the options-loaded checker didn't work if several dropdowns contained the value checked for
-                //       the entire normalize, etc. was required due to multiple classes..
-                //we need class selector without "." in the beginning, so remove if present
-                String classNameOnly = selector.startsWith("css=.")?selector.substring(5):selector;
-                elementPresent("//select[contains(@class, '"+classNameOnly+"') and option='"+selectMap.get(selector)+"']", selenium);
-                //make sure options for select box are loaded
-//                elementPresent("//select[option='"+selectMap.get(selector)+"']", selenium);
-            } catch (Exception e) {
-                System.out.println("    ERROR -- ELEMENT NOT PRESENT");
-            }
-            assertEquals(selectMap.get(selector), selenium.getSelectedLabel(selector));
+            String classNameOnly = selector.startsWith("css=.") ? selector.substring(5) : selector;
+            Select select = new Select(driver.findElement(By.className(classNameOnly)));
+            assertTrue("Multiple options present", select.getOptions().size() > 1);
+            assertEquals(selectMap.get(selector), select.getFirstSelectedOption().getText());
         }
     }
 
@@ -657,8 +782,13 @@ public class Utilities {
     }
 
     public static void waitForRecordSave(WebDriverBackedSelenium selenium) throws Exception {
-        textPresent("successfully", selenium);
-//        elementNotPresent("//select[option='Options not loaded']", selenium);
+            driver = selenium.getWrappedDriver();
+            (new WebDriverWait(driver, MAX_WAIT_SEC))
+                    .until(textToBePresentInElementLocated(By.className("cs-messageBar-message"), "successfully saved"));
+            driver.findElement(By.className("cs-messageBar-cancel")).click();
+
+        Thread.sleep(3000);
+// elementNotPresent("//select[option='Options not loaded']", selenium);
     }
     
     /**
@@ -673,7 +803,7 @@ public class Utilities {
         if (recordType == Record.GROUP) { //group doesn't have number picker
             elementPresent("//select[option='Decorative Arts']", selenium);
         } else {
-            elementPresent("//input[@value='Select number pattern']", selenium);
+           waitForRecordLoad(selenium);
         }
         elementPresent(Record.getIDSelector(recordType), selenium);
     }
@@ -783,7 +913,7 @@ public class Utilities {
      * Asserts that the element is present within MAX_WAIT_SEC
      *
      * @param selector The selector for the element to check
-     * @param selenium aWebDriverBackedSelenium object to check with
+     * @param selenium a WebDriverBackedSelenium object to check with
      * @throws Exception
      */
     static final void elementPresent(String selector,WebDriverBackedSelenium selenium) throws Exception {
@@ -796,7 +926,7 @@ public class Utilities {
                     break;
                 }
             } catch (Exception e) {
-                
+
             }
             Thread.sleep(1000);
         }
